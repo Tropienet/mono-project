@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import firebase  from './Common/firebase';
+import DisplayVehicle from './Components/DisplayVehicleMake';
 
 function App() {
 
@@ -32,12 +33,13 @@ function App() {
   return (
     <div className="App">
       <p>This is a mono Application</p>
+      <ul>
         {vehicleMake.map((vehicle) => (
-          <div key={vehicle.Id}>
-            <h2>{vehicle.Name}</h2>
-            <p>{vehicle.Abrv}</p>
-          </div>
+          <DisplayVehicle key={vehicle.Id} 
+                          name={vehicle.Name}
+                          abrv={vehicle.Abrv} />
         ))}
+        </ul>
     </div>
   );
 }
