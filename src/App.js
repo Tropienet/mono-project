@@ -1,9 +1,12 @@
+import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import './App.css';
 import firebase  from './Common/firebase';
 import DisplayVehicle from './Components/DisplayVehicleMake';
+import store from './Stores/Store';
 
-function App() {
+
+/*function App() {
 
   const [loading, setLoading] = useState(false);
   const [vehicleMake, setVehicleMake] = useState([])
@@ -40,8 +43,34 @@ function App() {
                           abrv={vehicle.Abrv} />
         ))}
         </ul>
+        {store.data.map(vehicle => (
+          <div key={vehicle.Id}>
+            <div>{vehicle.Name}</div>
+          </div>
+        ))}
     </div>
   );
-}
+}*/
+
+const App = observer(() => {
+  useEffect(() => {
+    store.fetchData()
+  }, [])
+
+  return(
+    <div>
+  
+      <ul>
+      {store.data.map(vehicle =>(
+        <DisplayVehicle key={vehicle.Id}
+                        name={vehicle.Name}
+                        abrv={vehicle.Abrv}
+                        />
+      ))}
+      </ul>
+    </div>
+  )
+})
+
 
 export default App;
