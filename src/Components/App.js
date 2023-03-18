@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import firebase from "./Common/firebase"
+import firebase from "../Common/firebase"
 
 const App = observer(({observableStore}) => {
   const ref = firebase.firestore().collection("VehicleMake")
