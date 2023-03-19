@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import firebase from "../Common/firebase"
 import DisplayModelInfo from "./DisplayModelInfo";
+import "../Layouts/VehicleModel.css"
 
 const DisplayVehicleModel = observer(({vehicleModelStore}) => {
   const [page, setPage] = useState(1)
@@ -44,9 +45,11 @@ const DisplayVehicleModel = observer(({vehicleModelStore}) => {
   }
 
     return (
-        <div>
-      <button onClick={sortAsc}>Sort Ascending</button>
-      <button onClick={sortDesc}>Sort Descending</button>
+        <div className="vehicle-model">
+            <div className="btns">
+                <button onClick={sortAsc}>Sort Ascending</button>
+                <button onClick={sortDesc}>Sort Descending</button>
+            </div>
       <label htmlFor="filter">Filter:</label>
       <input type="text" value={filter} onChange={e => setFilter(e.target.value)}></input>
       <label htmlFor="itemsPerPage">Items per page:</label>
@@ -62,8 +65,10 @@ const DisplayVehicleModel = observer(({vehicleModelStore}) => {
                                   makeId={item.MakeId}
                                   />
             ))}
-      <button disabled={page===1} onClick={HandlePrevPage}>Previous Page</button>
-      <button disabled={data.length < itemsPerPage} onClick={HandleNextPage}>Next Page</button>
+            <div className="btns">
+                <button disabled={page===1} onClick={HandlePrevPage}>Previous Page</button>
+                <button disabled={data.length < itemsPerPage} onClick={HandleNextPage}>Next Page</button>
+            </div>
         </div>
     )
 })
