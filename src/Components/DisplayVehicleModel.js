@@ -1,40 +1,38 @@
-import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react";
 import firebase from "../Common/firebase"
-import DisplayVehicleMake from "./DisplayVehicleMake";
-import DisplayVehicleModel from "./DisplayVehicleModel";
-import vehicleModelStore from "../Stores/VehicleModelStore";
+import DisplayModelInfo from "./DisplayModelInfo";
 
-const App = observer(({observableStore}) => {
+const DisplayVehicleModel = observer(({vehicleModelStore}) => {
   const [page, setPage] = useState(1)
   const [filter, setFilter] = useState("")
   const [itemsPerPage, setItemsPerPage] = useState(4)
 
-  const ref = firebase.firestore().collection("VehicleMake")
+  const ref = firebase.firestore().collection("VehicleModel")
   
   useEffect(() => {
-    observableStore.addData(ref);
+    vehicleModelStore.addData(ref);
   }, [])
 
   useEffect(() => {
-    observableStore.setFilter(filter)
+    vehicleModelStore.setFilter(filter)
     setPage(1)
   }, [filter])
 
   useEffect(() => {
   }, [itemsPerPage])
 
-  const filteredData = observableStore.data.filter(item => item.Name.toLowerCase().includes(filter.toLowerCase()))
+  const filteredData = vehicleModelStore.data.filter(item => item.Name.toLowerCase().includes(filter.toLowerCase()))
   const data = filteredData.slice((page - 1)*itemsPerPage, page * itemsPerPage)
   
   const sortAsc = () => {
     const refAsc = ref.orderBy("Name", "asc");  
-    observableStore.addData(refAsc)
+    vehicleModelStore.addData(refAsc)
   }
 
   const sortDesc = () => {
     const refDesc = ref.orderBy("Name", "desc")
-    observableStore.addData(refDesc)
+    vehicleModelStore.addData(refDesc)
   }
 
   const HandlePrevPage = () => {
@@ -45,8 +43,8 @@ const App = observer(({observableStore}) => {
     setPage(page + 1)
   }
 
-  return (
-    <div>
+    return (
+        <div>
       <button onClick={sortAsc}>Sort Ascending</button>
       <button onClick={sortDesc}>Sort Descending</button>
       <label htmlFor="filter">Filter:</label>
@@ -57,19 +55,17 @@ const App = observer(({observableStore}) => {
              onChange={e => setItemsPerPage(e.target.value)}
              min="1"
              max="10"></input>
-      <ul>
-      {data.map(item => (
-        <DisplayVehicleMake key={item.Id}
-                            name={item.Name}
-                            abrv={item.Abrv}
-                            />
-      ))}
-      </ul>
+            {data.map(item => (
+                <DisplayModelInfo key={item.Id}
+                                  name={item.Name}
+                                  abrv={item.Abrv}
+                                  makeId={item.MakeId}
+                                  />
+            ))}
       <button disabled={page===1} onClick={HandlePrevPage}>Previous Page</button>
       <button disabled={data.length < itemsPerPage} onClick={HandleNextPage}>Next Page</button>
-      <DisplayVehicleModel vehicleModelStore={vehicleModelStore}></DisplayVehicleModel>
-    </div>
-  )
+        </div>
+    )
 })
 
-export default App;
+export default DisplayVehicleModel;
