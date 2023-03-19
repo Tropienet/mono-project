@@ -1,14 +1,16 @@
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useEffect } from "react";
 import firebase from "../Common/firebase"
+import DisplayVehicleMake from "./DisplayVehicleMake";
 
 const App = observer(({observableStore}) => {
   const ref = firebase.firestore().collection("VehicleMake")
   
-  const logStore = () => {
+  useEffect(() => {
     observableStore.addData(ref);
-  }
+  }, [])
 
+  
   const sortAsc = () => {
     const refAsc = ref.orderBy("Name", "asc");  
     observableStore.addData(refAsc)
@@ -21,13 +23,16 @@ const App = observer(({observableStore}) => {
 
   return (
     <div>
-      <button onClick={logStore}>Click</button>
       <button onClick={sortAsc}>Ascending</button>
       <button onClick={sortDesc}>Descending</button>
-      Hello World
+      <ul>
       {observableStore.data.map(item => (
-        <div key={item.Id}>{item.Name} {item.Abrv}</div>
+        <DisplayVehicleMake key={item.Id}
+                            name={item.Name}
+                            abrv={item.Abrv}
+                            />
       ))}
+      </ul>
     </div>
   )
 })
