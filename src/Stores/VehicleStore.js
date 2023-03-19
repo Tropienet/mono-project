@@ -22,8 +22,6 @@ class bservableStore {
             })
         })
     }
-
-
 }
 
 const observableStore = new bservableStore();
