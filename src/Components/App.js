@@ -7,6 +7,7 @@ const PAGE_SIZE = 4;
 
 const App = observer(({observableStore}) => {
   const [page, setPage] = useState(1)
+  const [filter, setFilter] = useState("")
 
   const ref = firebase.firestore().collection("VehicleMake")
   
@@ -14,7 +15,13 @@ const App = observer(({observableStore}) => {
     observableStore.addData(ref);
   }, [])
 
-  const data = observableStore.data.slice((page - 1)*PAGE_SIZE, page * PAGE_SIZE)
+  useEffect(() => {
+    observableStore.setFilter(filter)
+    setPage(1)
+  }, [filter])
+
+  const filteredData = observableStore.data.filter(item => item.Name.toLowerCase().includes(filter.toLowerCase()))
+  const data = filteredData.slice((page - 1)*PAGE_SIZE, page * PAGE_SIZE)
   
   const sortAsc = () => {
     const refAsc = ref.orderBy("Name", "asc");  
@@ -36,8 +43,9 @@ const App = observer(({observableStore}) => {
 
   return (
     <div>
-      <button onClick={sortAsc}>Ascending</button>
-      <button onClick={sortDesc}>Descending</button>
+      <button onClick={sortAsc}>Sort Ascending</button>
+      <button onClick={sortDesc}>Sort Descending</button>
+      <input type="text" value={filter} onChange={e => setFilter(e.target.value)}></input>
       <ul>
       {data.map(item => (
         <DisplayVehicleMake key={item.Id}
